@@ -31,7 +31,7 @@ TMPDIR=$(mktemp -d)
 echo "📦 Downloading umigent..."
 
 # Download from GitHub
-REPO_URL="https://github.com/itshaiheree/umigent/archive/refs/heads/umami.tar.gz"
+REPO_URL="https://github.com/itshaiheree/umigent/raw/refs/heads/main/umami.tar.gz"
 if command -v curl &> /dev/null; then
   curl -fsSL "$REPO_URL" -o "$TMPDIR/umigent.tar.gz"
 elif command -v wget &> /dev/null; then
