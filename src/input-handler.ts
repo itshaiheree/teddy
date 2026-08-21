@@ -10,7 +10,7 @@ import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
 
 // --- Persistent history file ---
 
-const HISTORY_DIR = join(homedir(), ".umigent");
+const HISTORY_DIR = join(homedir(), ".teddy");
 const HISTORY_FILE = join(HISTORY_DIR, "history");
 const MAX_HISTORY = 500;
 

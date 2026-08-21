@@ -101,7 +101,7 @@ export function printBanner(
   const termWidth = process.stdout.columns || 80;
   const maxAllowed = Math.max(30, termWidth - 2);
 
-  const titleText = "umigent v1.0 | By Nijushi Digital";
+  const titleText = "Teddy v1.0 | By Nijushi Digital";
   const providerLine = `provider: ${provider}  |  model: ${config.model}`;
   const sessionLine = sessionName ? `session: ${sessionName}` : "";
   const turnLine = turns !== undefined ? `turns: ${turns}/${MAX_TURNS_DISPLAY}` : "";
@@ -140,7 +140,7 @@ export function printBanner(
     console.log(
       color("│", C.gray) +
         " ".repeat(titlePad) +
-        color("umigent", C.bold, C.deepBlue) +
+        color("Teddy", C.bold, C.deepBlue) +
         color(" v1.0", C.dim, C.deepBlue) +
         color(" | ", C.dim) +
         color("By Nijushi Digital", C.dim,) +
@@ -543,7 +543,7 @@ export function printHelp(): void {
   console.log(
     color("│", C.gray) +
       color("  Ctrl+E     ", C.bold, C.cyan) +
-      color("Exit umigent", C.dim) +
+      color("Exit Teddy", C.dim) +
       color("                           │", C.gray)
   );
   console.log(

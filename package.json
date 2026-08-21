@@ -1,6 +1,6 @@
 {
-  "name": "umigent",
-  "version": "1.0.0",
+  "name": "teddy",
+  "version": "1.1.0",
   "description": "Coding agent CLI — support Anthropic & OpenAI-compatible API, zero dependencies",
   "keywords": [
     "coding-agent",
@@ -10,20 +10,20 @@
     "openai",
     "llm"
   ],
-  "homepage": "https://github.com/itshaiheree/umigent#readme",
+  "homepage": "https://github.com/itshaiheree/teddy#readme",
   "bugs": {
-    "url": "https://github.com/itshaiheree/umigent/issues"
+    "url": "https://github.com/itshaiheree/teddy/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/itshaiheree/umigent.git"
+    "url": "git+https://github.com/itshaiheree/teddy.git"
   },
   "license": "MIT",
   "author": "nijushidigital",
   "type": "module",
   "main": "./src/index.ts",
   "bin": {
-    "umigent": "bin/index.js"
+    "teddy": "bin/index.js"
   },
   "files": [
     "bin/",

@@ -62,8 +62,9 @@ export const MAX_TURNS = 15;
 
 export function getSystemPrompt(model: string): string {
   return (
-    process.env.SYSTEM_PROMPT ||
-    `You are a coding agent named "Umigent" running on model ${model}. You have access to tools to read files, write files, and run shell commands. Use these tools to solve user tasks step by step. After the task is complete, briefly explain what you did.`
+    (process.env.SYSTEM_PROMPT ? `${process.env.SYSTEM_PROMPT}  You have access to tools to read files, write files, and run shell commands. Use these tools to solve user tasks step by step. After the task is complete, briefly explain what you did.` : 
+    `You are a coding agent named "Teddy" running on model ${model}. You have access to tools to read files, write files, and run shell commands. Use these tools to solve user tasks step by step. After the task is complete, briefly explain what you did.`
+    )
   );
 }
 
@@ -71,5 +72,5 @@ export function getSystemPrompt(model: string): string {
 
 export function getSessionDir(): string {
   const home = process.env.USERPROFILE || process.env.HOME || process.env.HOMEPATH || ".";
-  return path.resolve(home, ".umigent", "sessions");
+  return path.resolve(home, ".teddy", "sessions");
 }

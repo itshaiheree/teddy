@@ -1,4 +1,4 @@
-# ⚡ umigent — Coding Agent CLI
+# 🧸 Teddy — AI Agent CLI
 
 **Zero-dependency** coding agent. Supports **Anthropic** & **OpenAI-compatible** APIs (OpenAI, Groq, OpenRouter, Ollama, DeepSeek, etc.).
 
@@ -6,22 +6,22 @@
 
 ### npm (global)
 ```bash
-npm install -g umigent
+npm install -g teddy
 ```
 
 ### curl (Linux/macOS)
 ```bash
-curl -fsSL https://raw.githubusercontent.com/itshaiheree/umigent/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/itshaiheree/teddy/main/install.sh | bash
 ```
 
 ### PowerShell (Windows)
 ```powershell
-irm https://raw.githubusercontent.com/itshaiheree/umigent/main/install.ps1 | iex
+irm https://raw.githubusercontent.com/itshaiheree/teddy/main/install.ps1 | iex
 ```
 
 ## ⚙️ Configuration
 
-Create `.env` in your project directory or set environment variables:
+Create `.env` in ```C:\Users\<user>\.teddy\```. You can also put it in folder your project directory or set environment variables with this template:
 
 ```env
 # Provider: "anthropic" or "openai"
@@ -36,18 +36,21 @@ MODEL=gpt-4o
 # PROVIDER=anthropic
 # ANTHROPIC_API_KEY=sk-ant-...
 # MODEL=claude-sonnet-4-6
+
+# If you wish to provide a custom system prompt, you can enter it here! By default, Teddy comes with a built-in system prompt, so you are not required to provide this enviroment.
+# SYSTEM_PROMPT="Kamu adalah sebuah boneka beruang raksasa berukuran 3.5 kaki"
 ```
 
 ## 🎮 Usage
 
 ### Interactive mode (REPL)
 ```bash
-umigent
+teddy
 ```
 
 ### One-shot mode
 ```bash
-umigent "Buat file hello.js lalu jalankan"
+teddy "Buat file hello.js lalu jalankan"
 ```
 
 ## ⌨️ Commands
@@ -62,7 +65,7 @@ umigent "Buat file hello.js lalu jalankan"
 
 ## 💾 Sessions
 
-- All sessions are saved automatically to `~/.umigent/sessions/`
+- All sessions are saved automatically to `~/.teddy/sessions/`
 - Press **CTRL+O** or type `:sessions` to browse, load, or delete sessions
 - Arrow keys to navigate, Enter to select, Esc to cancel
 - Sessions persist across restarts
@@ -70,8 +73,8 @@ umigent "Buat file hello.js lalu jalankan"
 ## 🔧 Dev
 
 ```bash
-git clone https://github.com/username/umigent.git
-cd umigent
+git clone https://github.com/username/teddy.git
+cd teddy
 npm install
 npm run dev        # Run with ts-node
 npm run build      # Compile TypeScript
