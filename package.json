@@ -1,0 +1,39 @@
+{
+  "name": "umigent",
+  "version": "2.0.0",
+  "description": "Coding agent CLI — support Anthropic & OpenAI-compatible API, zero dependencies",
+  "type": "module",
+  "main": "./src/index.ts",
+  "bin": {
+    "umigent": "./bin/index.js"
+  },
+  "scripts": {
+    "start": "node --no-deprecation --loader ts-node/esm src/index.ts",
+    "build": "tsc && node -e \"const fs=require('fs');const f='bin/index.js';const c=fs.readFileSync(f,'utf8');if(!c.startsWith('#!'))fs.writeFileSync(f,'#!/usr/bin/env node --no-deprecation\\n'+c)\"",
+    "dev": "node --no-deprecation --loader ts-node/esm src/index.ts"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.3",
+    "@types/node": "^22.9.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "files": [
+    "bin/",
+    "src/",
+    "package.json",
+    "README.md"
+  ],
+  "keywords": [
+    "coding-agent",
+    "cli",
+    "ai",
+    "anthropic",
+    "openai",
+    "llm"
+  ],
+  "license": "MIT"
+}
