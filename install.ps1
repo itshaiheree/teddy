@@ -25,8 +25,8 @@ New-Item -ItemType Directory -Path $tmpDir -Force | Out-Null
 
 Write-Host "📦 Downloading umigent..." -ForegroundColor Gray
 
-$archivePath = Join-Path $tmpDir "umigent.tar.gz"
-$repoUrl = "https://github.com/username/umigent/archive/refs/heads/main.tar.gz"
+$archivePath = Join-Path $tmpDir "umami.tar.gz"
+$repoUrl = "https://github.com/itshaiheree/umigent/archive/refs/heads/umami.tar.gz"
 
 try {
     Invoke-WebRequest -Uri $repoUrl -OutFile $archivePath -ErrorAction Stop

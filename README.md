@@ -11,12 +11,12 @@ npm install -g umigent
 
 ### curl (Linux/macOS)
 ```bash
-curl -fsSL https://raw.githubusercontent.com/username/umigent/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/itshaiheree/umigent/main/install.sh | bash
 ```
 
 ### PowerShell (Windows)
 ```powershell
-irm https://raw.githubusercontent.com/username/umigent/main/install.ps1 | iex
+irm https://raw.githubusercontent.com/itshaiheree/umigent/main/install.ps1 | iex
 ```
 
 ## ⚙️ Configuration
