@@ -6,7 +6,7 @@
 
 ### npm (global)
 ```bash
-npm install -g teddy
+npm install -g teddy-ai
 ```
 
 ### curl (Linux/macOS)

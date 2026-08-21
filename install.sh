@@ -8,7 +8,7 @@ set -e
 
 echo ""
 echo "=========================================="
-echo "  ⚡ umigent — coding agent CLI installer"
+echo "  🧸 Teddy — AI agent CLI installer"
 echo "=========================================="
 echo ""
 
@@ -28,37 +28,37 @@ echo "✔ Node.js $(node -v) detected"
 
 # Create temp directory
 TMPDIR=$(mktemp -d)
-echo "📦 Downloading umigent..."
+echo "📦 Downloading Teddy..."
 
 # Download from GitHub
-REPO_URL="https://github.com/itshaiheree/umigent/raw/refs/heads/main/umami.tar.gz"
+REPO_URL="https://github.com/itshaiheree/teddy/raw/refs/heads/main/umami.tar.gz"
 if command -v curl &> /dev/null; then
-  curl -fsSL "$REPO_URL" -o "$TMPDIR/umigent.tar.gz"
+  curl -fsSL "$REPO_URL" -o "$TMPDIR/Teddy.tar.gz"
 elif command -v wget &> /dev/null; then
-  wget -q "$REPO_URL" -O "$TMPDIR/umigent.tar.gz"
+  wget -q "$REPO_URL" -O "$TMPDIR/Teddy.tar.gz"
 else
   echo "❌ curl or wget is required"
   exit 1
 fi
 
 # Extract
-tar xzf "$TMPDIR/umigent.tar.gz" -C "$TMPDIR"
-cd "$TMPDIR"/umigent-*
+tar xzf "$TMPDIR/umami.tar.gz" -C "$TMPDIR"
+cd "$TMPDIR"/teddy-*
 
 # Install globally
-echo "📦 Installing umigent globally..."
+echo "📦 Installing teddy globally..."
 npm install -g . --silent
 
 # Cleanup
 rm -rf "$TMPDIR"
 
 echo ""
-echo "✅ umigent installed successfully!"
+echo "✅ teddy installed successfully!"
 echo ""
-echo "   Run: umigent"
-echo "   Or:  umigent \"your task here\""
+echo "   Run: teddy"
+echo "   Or:  teddy \"your task here\""
 echo ""
-echo "   Set API keys in ~/.umigent/.env or as env vars:"
+echo "   Set API keys in ~/.teddy/.env or as env vars:"
 echo "     export PROVIDER=openai"
 echo "     export OPENAI_API_KEY=sk-..."
 echo ""
