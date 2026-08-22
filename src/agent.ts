@@ -5,7 +5,7 @@
 import { Provider, ProviderConfig, ConvTurn, ToolCall } from "./types.js";
 import { callAnthropic } from "./providers/anthropic.js";
 import { callOpenAI } from "./providers/openai.js";
-import { executeTool } from "./tools.js";
+import { executeTool, resetRunCommandConsent } from "./tools.js";
 import { MAX_TURNS } from "./config.js";
 import {
   clearScreen,
@@ -114,7 +114,7 @@ async function agentStep(
 
       let output: string;
       try {
-        output = executeTool(tc.name, tc.input);
+        output = await executeTool(tc.name, tc.input);
       } catch (err: any) {
         // Tool execution failures are real, recordable events too — capture
         // them as the tool's output AND as a dedicated error turn so both
@@ -189,6 +189,7 @@ export async function startRepl(
   config: ProviderConfig,
   provider: Provider
 ): Promise<void> {
+  resetRunCommandConsent();
   clearScreen();
 
   let session: Session;
@@ -271,6 +272,7 @@ export async function startRepl(
       clearScreen();
       printBanner(provider, config, "new session (cleared)", 0);
       printStatusBar();
+      resetRunCommandConsent();
     }
 
     if (event.type === "ctrl_e") {
@@ -307,6 +309,7 @@ export async function startRepl(
       clearScreen();
       printBanner(provider, config, "new session", 0);
       printStatusBar();
+      resetRunCommandConsent();
       process.stdout.write(
         color("You", C.bold, C.deepBlue) + color(" › ", C.gray)
       );
@@ -340,6 +343,7 @@ export async function startRepl(
       clearScreen();
       printBanner(provider, config, "new session (cleared)", 0);
       printStatusBar();
+      resetRunCommandConsent();
       continue;
     }
 
@@ -349,6 +353,7 @@ export async function startRepl(
       clearScreen();
       printBanner(provider, config, "new session", 0);
       printStatusBar();
+      resetRunCommandConsent();
       continue;
     }
 
@@ -357,6 +362,7 @@ export async function startRepl(
       const result = await showSessionPicker();
       if (result.action === "select") {
         session = result.session;
+        resetRunCommandConsent();
         clearScreen();
         const meta = formatSessionMeta(session);
         printBanner(provider, config, meta, session.turnCount);
@@ -408,6 +414,7 @@ export async function runOnce(
   config: ProviderConfig,
   provider: Provider
 ): Promise<void> {
+  resetRunCommandConsent();
   clearScreen();
   printBanner(provider, config);
 
