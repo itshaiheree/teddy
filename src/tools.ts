@@ -79,8 +79,12 @@ async function promptForConsent(command: string): Promise<ConsentChoice> {
       // don't leak into the user's next prompt buffer.
       resumeInput();
       if (isTTY) {
-        stdin.setRawMode(false);
-        stdin.pause();
+        // The REPL runs in raw mode with a *flowing* stdin. Restore exactly
+        // that state. Do NOT call stdin.pause(): pausing drops the open stdin
+        // handle that keeps the Node event loop alive, so with nothing else
+        // pending the process would exit right after this task finishes.
+        stdin.setRawMode(true);
+        stdin.resume();
       }
       stdin.off("data", onData);
     }
