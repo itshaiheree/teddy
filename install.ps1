@@ -52,9 +52,27 @@ try {
     exit 1
 }
 
+# Sanity check: the downloaded file MUST be a real gzip archive.
+# If the release asset is missing or saved in another format (e.g. 7-Zip),
+# `tar xzf` would fail with "gzip: stdin: not in gzip format".
+$bytes = Get-Content -Path $archivePath -Encoding Byte -TotalCount 2 -ErrorAction SilentlyContinue
+if (-not $bytes -or $bytes[0] -ne 0x1F -or $bytes[1] -ne 0x8B) {
+    Write-Host "ERROR: Downloaded file is not a valid gzip archive." -ForegroundColor Red
+    Write-Host "   The release asset may be missing or misconfigured." -ForegroundColor Gray
+    Write-Host "   Expected URL: $repoUrl" -ForegroundColor Gray
+    Write-Host "   Please report this at: https://github.com/itshaiheree/teddy/issues" -ForegroundColor Gray
+    exit 1
+}
+
 # Extract
 Write-Host "Extracting..." -ForegroundColor Gray
 tar xzf $archivePath -C $installDir
+
+# Verify the main entry point was extracted
+if (-not (Test-Path (Join-Path $installDir "index.js"))) {
+    Write-Host "ERROR: Extraction failed - index.js not found in $installDir" -ForegroundColor Red
+    exit 1
+}
 
 # Create package.json with type:module so Node.js treats .js as ESM
 $packageJsonPath = Join-Path $installDir "package.json"

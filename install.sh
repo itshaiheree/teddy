@@ -50,9 +50,29 @@ else
   exit 1
 fi
 
+# Sanity check: the downloaded file MUST be a real gzip archive.
+# The repo's release asset is a .tar.gz; if it is missing, misconfigured,
+# or accidentally saved in another format (e.g. 7-Zip), `tar xzf` would
+# fail with "gzip: stdin: not in gzip format". Catch that early instead.
+if [ ! -s "$TMPDIR/umami.tar.gz" ] || ! gzip -t "$TMPDIR/umami.tar.gz" 2>/dev/null; then
+  echo "ERROR: Downloaded file is not a valid gzip archive."
+  echo "   The release asset may be missing or misconfigured."
+  echo "   Expected URL: $REPO_URL"
+  echo "   Please report this at: https://github.com/itshaiheree/teddy/issues"
+  rm -rf "$TMPDIR"
+  exit 1
+fi
+
 # Extract to install directory
 echo "Extracting..."
 tar xzf "$TMPDIR/umami.tar.gz" -C "$INSTALL_DIR"
+
+# Verify the main entry point was extracted
+if [ ! -f "$INSTALL_DIR/index.js" ]; then
+  echo "ERROR: Extraction failed — index.js not found in $INSTALL_DIR"
+  rm -rf "$TMPDIR"
+  exit 1
+fi
 
 # Create package.json with type:module so Node.js treats .js as ESM
 echo '{"type":"module"}' > "$INSTALL_DIR/package.json"
