@@ -60,12 +60,16 @@ export function getProviderConfig(provider: Provider): ProviderConfig {
 
 export const MAX_TURNS = 15;
 
+const TOOL_USAGE =
+  "You have access to tools to read files, write files, and run shell commands. " +
+  "You MUST use these tools to actually perform any file or command action — invoke the tool directly instead of only describing the action or printing the code/output in your reply. " +
+  "When a request implies creating, reading, or modifying files, or running commands, always respond with the appropriate tool call. " +
+  "Use the tools step by step to solve the user's task. After the task is complete, briefly explain what you did.";
+
 export function getSystemPrompt(model: string): string {
-  return (
-    (process.env.SYSTEM_PROMPT ? `${process.env.SYSTEM_PROMPT}  You have access to tools to read files, write files, and run shell commands. Use these tools to solve user tasks step by step. After the task is complete, briefly explain what you did.` : 
-    `You are a coding agent named "Teddy" running on model ${model}. You have access to tools to read files, write files, and run shell commands. Use these tools to solve user tasks step by step. After the task is complete, briefly explain what you did.`
-    )
-  );
+  return process.env.SYSTEM_PROMPT
+    ? `${process.env.SYSTEM_PROMPT}  ${TOOL_USAGE}`
+    : `You are a coding agent named "Teddy" running on model ${model}. ${TOOL_USAGE}`;
 }
 
 // --- Session Dir ---
