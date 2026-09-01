@@ -430,5 +430,10 @@ export async function runOnce(
     }
   } finally {
     saveSession(session);
+    // Restore terminal state (cooked mode + release the stdin handle). A
+    // run_command consent leaves stdin raw+flowing, which would otherwise
+    // keep the Node event loop alive and prevent a one-shot task from ever
+    // exiting cleanly.
+    restoreInput();
   }
 }

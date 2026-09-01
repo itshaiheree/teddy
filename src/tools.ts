@@ -28,11 +28,37 @@ export function resetRunCommandConsent(): void {
 
 // --- Consent Prompt ---
 
-type ConsentChoice = "allow" | "deny" | "always";
+type ConsentChoice = "allow" | "deny" | "always" | "deny_ntty";
+
+// How long (ms) to wait for a consent keypress before auto-denying. This is a
+// last-resort guard so the prompt can never hang the process forever, even if
+// stdin stops delivering input in some odd terminal state.
+const CONSENT_TIMEOUT_MS = 120_000;
 
 async function promptForConsent(command: string): Promise<ConsentChoice> {
   if (runCommandAlwaysAllow) {
     return "allow";
+  }
+
+  const stdin = process.stdin;
+  const isTTY = stdin.isTTY;
+
+  // No interactive terminal → there is no way to read an a/d/s keypress.
+  // Return a denial *immediately* instead of attaching a 'data' listener that
+  // never fires. On a closed/piped stdin the old code waited on that listener
+  // forever; with nothing else pending, the Node event loop emptied out and
+  // the process quit silently (exit code 0, no output) right here — the bug
+  // this guard fixes.
+  if (!isTTY) {
+    drawBox(" ⚠ Command Execution Blocked ", [
+      color("The agent wants to run a shell command:", C.yellow),
+      "",
+      color(`  ${command}`, C.cyan),
+      "",
+      color("Blocked: no interactive terminal (TTY) to approve it.", C.red),
+      color("Re-run Teddy in an interactive terminal to allow shell commands.", C.dim),
+    ]);
+    return "deny_ntty";
   }
 
   // Use the existing drawBox function for a nice UI
@@ -48,28 +74,35 @@ async function promptForConsent(command: string): Promise<ConsentChoice> {
     footer: color("  [A] Allow   [D] Deny   [S] Always Allow", C.dim),
   });
 
-  // Read single keypress without enter
-  const stdin = process.stdin;
-  const isTTY = stdin.isTTY;
-
-  if (isTTY) {
-    stdin.setRawMode(true);
-    stdin.resume();
-    stdin.setEncoding("utf-8");
-  }
+  // Read a single keypress without Enter. Note: we deliberately do NOT call
+  // stdin.setEncoding("utf-8") here — that permanently changes the encoding of
+  // the shared stdin stream and makes the main REPL input handler start
+  // receiving strings instead of Buffers. We read the raw Buffer and convert
+  // it ourselves instead, so the REPL handler's expectations stay intact.
+  stdin.setRawMode(true);
+  stdin.resume();
 
   return new Promise((resolve) => {
-    function onData(key: string) {
-      const k = key.toLowerCase();
+    let settled = false;
+
+    const timer = setTimeout(() => finish("deny"), CONSENT_TIMEOUT_MS);
+
+    function finish(choice: ConsentChoice) {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timer);
+      cleanup();
+      resolve(choice);
+    }
+
+    function onData(key: Buffer | string) {
+      const k = key.toString().toLowerCase();
       if (k === "a") {
-        cleanup();
-        resolve("allow");
+        finish("allow");
       } else if (k === "d") {
-        cleanup();
-        resolve("deny");
+        finish("deny");
       } else if (k === "s") {
-        cleanup();
-        resolve("always");
+        finish("always");
       }
       // Ignore other keys
     }
@@ -78,14 +111,12 @@ async function promptForConsent(command: string): Promise<ConsentChoice> {
       // Hand input back to the main REPL handler so the a/d/s keypresses
       // don't leak into the user's next prompt buffer.
       resumeInput();
-      if (isTTY) {
-        // The REPL runs in raw mode with a *flowing* stdin. Restore exactly
-        // that state. Do NOT call stdin.pause(): pausing drops the open stdin
-        // handle that keeps the Node event loop alive, so with nothing else
-        // pending the process would exit right after this task finishes.
-        stdin.setRawMode(true);
-        stdin.resume();
-      }
+      // The REPL runs in raw mode with a *flowing* stdin. Restore exactly
+      // that state. Do NOT call stdin.pause(): pausing drops the open stdin
+      // handle that keeps the Node event loop alive, so with nothing else
+      // pending the process would exit right after this task finishes.
+      stdin.setRawMode(true);
+      stdin.resume();
       stdin.off("data", onData);
     }
 
@@ -156,6 +187,10 @@ export async function executeTool(name: string, input: any): Promise<string> {
 
         if (consent === "deny") {
           return "Command execution denied by user.";
+        }
+
+        if (consent === "deny_ntty") {
+          return "Command execution blocked: no interactive terminal (TTY) available to approve it. Re-run Teddy in an interactive terminal to allow shell commands.";
         }
 
         if (consent === "always") {

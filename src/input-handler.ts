@@ -295,7 +295,11 @@ export function setupRawInput(): void {
 }
 
 export function restoreInput(): void {
-  process.stdin.setRawMode(rawModeWasEnabled);
+  // setRawMode() throws on a non-TTY stdin (e.g. one-shot run with piped
+  // input), so only touch raw mode when a real terminal is attached.
+  if (process.stdin.isTTY) {
+    process.stdin.setRawMode(rawModeWasEnabled);
+  }
   process.stdin.removeListener("data", onData);
   if (!rawModeWasEnabled) process.stdin.pause();
 }
