@@ -1,6 +1,6 @@
 {
   "name": "teddy-ai",
-  "version": "1.3.0",
+  "version": "1.2.2",
   "description": "AI agent CLI — support Anthropic & OpenAI-compatible API, zero dependencies",
   "keywords": [
     "coding-agent",
